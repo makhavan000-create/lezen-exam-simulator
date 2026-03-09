@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staatsexamen NT2 B1 Simulator - Definitief</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .content-area { display: flex; flex: 1; overflow: hidden; border-top: 1px solid #e2e8f0; }
+        .text-pane { flex: 1; background: white; overflow-y: auto; padding: 3rem; line-height: 1.8; border-right: 2px solid #e2e8f0; }
+        .question-pane { width: 500px; background: #f1f5f9; overflow-y: auto; padding: 2.5rem; }
+        .opt-btn { width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid #cbd5e1; border-radius: 0.75rem; background: white; transition: all 0.2s; display: flex; align-items: flex-start; }
+        .opt-btn:hover { border-color: #94a3b8; background: #f8fafc; }
+        .opt-btn.active { border-color: #003082; background: #eff6ff; box-shadow: 0 0 0 2px #003082; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; margin: 0 2px; border: 1px solid #cbd5e1; }
+        .status-dot.done { background: #10b981; border-color: #059669; }
+        .status-dot.current { background: #003082; border-color: #003082; transform: scale(1.3); }
+        .text-section h4 { color: #1e3a8a; font-weight: 800; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.25rem; }
+    </style>
+</head>
+<body>
+
+    <header class="bg-[#003082] text-white p-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-4">
+            <h1 class="font-extrabold tracking-tighter text-xl">NT2 B1 LEZEN SIMULATOR</h1>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="text-sm font-bold opacity-90">Vraag <span id="num-display">1</span> / 35</div>
+            <div id="timer-box" class="bg-black/20 px-4 py-1 rounded font-mono text-xl font-bold">110:00</div>
+            <button onclick="toggleGrid()" class="bg-white text-[#003082] px-4 py-1 rounded-md text-sm font-bold hover:bg-blue-50">Examenoverzicht</button>
+        </div>
+    </header>
+
+    <main class="content-area">
+        <div id="text-pane" class="text-pane">
+            <h2 id="view-text-title" class="text-3xl font-extrabold text-slate-900 mb-6">Laden...</h2>
+            <div id="view-text-body" class="prose prose-slate max-w-none text-slate-700"></div>
+        </div>
+        <div class="question-pane">
+            <div id="q-container">
+                <p id="q-context" class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2"></p>
+                <h3 id="view-q-text" class="text-lg font-bold text-slate-800 mb-6 leading-tight"></h3>
+                <div id="view-options"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white p-4 border-t flex justify-between items-center px-8">
+        <button id="btn-prev" onclick="move(-1)" class="px-6 py-2 bg-slate-200 rounded-lg font-bold text-slate-700 hover:bg-slate-300 disabled:opacity-30">Vorige</button>
+        <div id="dot-container" class="flex items-center"></div>
+        <button id="btn-next" onclick="move(1)" class="px-8 py-2 bg-[#003082] text-white rounded-lg font-bold hover:bg-blue-900">Volgende</button>
+    </footer>
+
+    <div id="grid-overlay" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+                <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">Voortgang</h2>
+                <button onclick="toggleGrid()" class="text-3xl font-light">&times;</button>
+            </div>
+            <div class="p-8 grid grid-cols-7 gap-3 overflow-y-auto" id="grid-content"></div>
+            <div class="p-6 border-t bg-slate-50 flex justify-end gap-3">
+                <button onclick="toggleGrid()" class="px-6 py-2 font-bold text-slate-500 hover:text-slate-800">Terug</button>
+                <button onclick="finishExam()" class="px-8 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 shadow-md">Definitief Inleveren</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EXAM_BANK = [
+            {
+                title: "Onderzoek naar Thuiswerken",
+                text: `
+                    <h4>De nieuwe balans</h4>
+                    <p>Sinds de grootschalige introductie van thuiswerken is de dynamiek op de arbeidsmarkt wezenlijk veranderd. Uit een recent rapport van het Sociaal en Cultureel Planbureau (SCP) blijkt dat werknemers die minstens twee dagen per week vanuit huis werken, een hogere tevredenheid rapporteren wat betreft de balans tussen werk en privé. Echter, ditzelfde rapport waarschuwt voor de 'onzichtbaarheid' van deze groep bij promotierondes.</p>
+                    <h4>Sociale isolatie en productiviteit</h4>
+                    <p>Hoewel de productiviteit op korte termijn vaak stijgt door het ontbreken van reistijd en kantoorgeluiden, uiten psychologen zorgen over de lange termijn. Het informele contact bij de koffieautomaat — de plek waar vaak creatieve ideeën ontstaan — valt weg. Bedrijven proberen dit op te vangen met 'digitale inloopuren', maar medewerkers ervaren dit vaak als geforceerd en minder effectief dan spontane ontmoetingen.</p>
+                    <h4>Juridische kaders</h4>
+                    <p>De wetgeving loopt momenteel achter op de praktijk. Er is discussie over de verantwoordelijkheid van de werkgever voor de ergonomische inrichting van de thuiswerkplek. Volgens de huidige Arbowet moet de werkgever zorgdragen voor een veilige plek, maar de uitvoering hiervan achter de voordeur van de werknemer is juridisch complex vanwege het recht op privacy.</p>
+                `,
+                questions: [
+                    { q: "Wat is volgens het SCP een nadeel van veel thuiswerken voor de werknemer?", o: ["Men wordt minder productief door afleidingen in huis.", "De kans op een hogere functie kan afnemen doordat men minder opvalt.", "De balans tussen werk en privé raakt volledig verstoord.", "Men krijgt sneller fysieke klachten door een slechte werkplek."], c: 1 },
+                    { q: "Waarom zijn 'digitale inloopuren' volgens de tekst geen perfecte oplossing?", o: ["Omdat medewerkers liever helemaal geen contact hebben met collega's.", "Omdat de techniek vaak hapert tijdens deze gesprekken.", "Omdat ze niet dezelfde natuurlijke creativiteit opwekken als echte ontmoetingen.", "Omdat leidinggevenden deze uren gebruiken om personeel te controleren."], c: 2 },
+                    { q: "Welk juridisch probleem wordt er genoemd bij de inrichting van de thuiswerkplek?", o: ["Werkgevers weigeren te betalen voor dure bureaustoelen.", "Werknemers willen niet dat de werkgever hun huis controleert.", "De Arbowet geldt officieel niet voor mensen die thuiswerken.", "Het is onduidelijk wie de stroomkosten van de computer moet betalen."], c: 1 }
+                ]
+            },
+            {
+                title: "Vrijwilligerswerk in de Gemeente",
+                text: `
+                    <h4>Nieuwe initiatieven</h4>
+                    <p>De gemeente Amsterdam start een campagne om meer jongeren (18-25 jaar) te betrekken bij vrijwilligerswerk. In ruil voor minimaal vier uur inzet per week kunnen zij aanspraak maken op een zogenaamde 'maatschappelijke bonus'. Dit is geen geldbedrag, maar een kortingspas voor culturele instellingen en sportscholen. Hiermee hoopt de gemeente de sociale betrokkenheid te vergroten en de eenzaamheid onder ouderen, die vaak de doelgroep van deze projecten zijn, te verminderen.</p>
+                    <h4>Verplichting of vrije keuze?</h4>
+                    <p>Er klinkt ook kritiek. Sommige politieke partijen pleiten voor een verplichte 'maatschappelijke diensttijd'. Zij stellen dat dit de integratie bevordert. Tegenstanders vinden echter dat de essentie van vrijwilligerswerk juist de vrijwilligheid is. Zodra er dwang bij komt kijken, zou de motivatie verdwijnen en de kwaliteit van de hulpverlening dalen. Vooralsnog blijft het beleid gebaseerd op stimulering in plaats van verplichting.</p>
+                    <h4>Aanmeldingsprocedure</h4>
+                    <p>Jongeren kunnen zich aanmelden via het digitale platform 'MijnInzet'. Na een intakegesprek wordt gekeken naar een passende match. Het is belangrijk dat de vrijwilliger een Verklaring Omtrent het Gedrag (VOG) kan overleggen. De kosten hiervoor worden door de gemeente vergoed, mits de aanvraag via het platform wordt gedaan. Rechtstreekse aanvragen bij de Justis-dienst komen niet voor vergoeding in aanmerking.</p>
+                `,
+                questions: [
+                    { q: "Wat krijgt een jongere terug voor het vrijwilligerswerk bij dit project?", o: ["Een maandelijks geldbedrag als extra inkomen.", "Een certificaat dat verplicht is voor de studie.", "Goedkopere toegang tot cultuur en sport.", "Voorrang bij het huren van een sociale woning."], c: 2 },
+                    { q: "Waarom zijn sommige mensen tegen een verplichte maatschappelijke diensttijd?", o: ["Omdat jongeren al te druk zijn met hun eigen opleiding.", "Omdat de hulp aan ouderen dan minder goed zou kunnen worden.", "Omdat de gemeente niet genoeg geld heeft om dit te organiseren.", "Omdat ouderen liever geen verplichte hulp ontvangen."], c: 1 },
+                    { q: "Hoe kan een vrijwilliger de kosten voor de VOG terugkrijgen?", o: ["Door het bonnetje in te leveren bij de lokale sportschool.", "Door de VOG direct bij de dienst Justis te betalen.", "Door de aanvraag alleen via het officiële platform te regelen.", "De kosten worden nooit vergoed, maar zijn fiscaal aftrekbaar."], c: 2 }
+                ]
+            }
+        ];
+
+        let questions = [];
+        let answers = new Array(35).fill(null);
+        let currentIdx = 0;
+        let timeLeft = 110 * 60;
+
+        function setup() {
+            let count = 0;
+            // Loop until we hit 35 questions
+            while(count < 35) {
+                EXAM_BANK.forEach(set => {
+                    set.questions.forEach(qData => {
+                        if(count < 35) {
+                            questions.push({ ...qData, title: set.title, text: set.text, id: count });
+                            count++;
+                        }
+                    });
+                });
+            }
+            render();
+            startTimer();
+        }
+
+        function render() {
+            const q = questions[currentIdx];
+            document.getElementById('view-text-title').innerText = q.title;
+            document.getElementById('view-text-body').innerHTML = q.text;
+            document.getElementById('view-q-text').innerText = q.q;
+            document.getElementById('num-display').innerText = currentIdx + 1;
+            document.getElementById('q-context').innerText = `Onderdeel: ${q.title}`;
+
+            const opts = document.getElementById('view-options');
+            opts.innerHTML = '';
+            q.o.forEach((txt, i) => {
+                const b = document.createElement('button');
+                b.className = `opt-btn ${answers[currentIdx] === i ? 'active' : ''}`;
+                b.onclick = () => { answers[currentIdx] = i; render(); };
+                b.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold mr-4 text-slate-500 flex-shrink-0">${String.fromCharCode(65+i)}</span>
+                    <span class="text-slate-700 font-medium">${txt}</span>
+                `;
+                opts.appendChild(b);
+            });
+
+            document.getElementById('btn-prev').disabled = currentIdx === 0;
+            document.getElementById('btn-next').innerText = currentIdx === 34 ? 'Examen Inleveren' : 'Volgende';
+            updateProgress();
+        }
+
+        function move(dir) {
+            if(dir === 1 && currentIdx === 34) { toggleGrid(); return; }
+            currentIdx = Math.max(0, Math.min(34, currentIdx + dir));
+            document.getElementById('text-pane').scrollTop = 0;
+            render();
+        }
+
+        function updateProgress() {
+            const c = document.getElementById('dot-container');
+            c.innerHTML = '';
+            for(let i=0; i<35; i++) {
+                const d = document.createElement('div');
+                d.className = `status-dot ${i === currentIdx ? 'current' : ''} ${answers[i] !== null ? 'done' : ''}`;
+                c.appendChild(d);
+            }
+        }
+
+        function toggleGrid() {
+            const over = document.getElementById('grid-overlay');
+            const grid = document.getElementById('grid-content');
+            grid.innerHTML = '';
+            for(let i=0; i<35; i++) {
+                const b = document.createElement('button');
+                const isCurrent = i === currentIdx;
+                const isDone = answers[i] !== null;
+                b.className = `p-4 rounded-xl font-black text-lg border-2 transition-all ${isDone ? 'bg-[#003082] text-white' : 'bg-white text-slate-300 border-slate-200 border-dashed'} ${isCurrent ? 'ring-4 ring-orange-400' : ''}`;
+                b.innerText = i + 1;
+                b.onclick = () => { currentIdx = i; render(); toggleGrid(); };
+                grid.appendChild(b);
+            }
+            over.classList.toggle('hidden');
+        }
+
+        function startTimer() {
+            const box = document.getElementById('timer-box');
+            setInterval(() => {
+                if(timeLeft <= 0) finishExam();
+                timeLeft--;
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                box.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            }, 1000);
+        }
+
+        function finishExam() {
+            let score = 0;
+            questions.forEach((q, i) => { if(answers[i] === q.c) score++; });
+            const p = Math.round((score / 35) * 100);
+            const win = p >= 62;
+
+            document.body.innerHTML = `
+                <div class="h-screen w-screen flex items-center justify-center bg-slate-100 p-10 overflow-hidden">
+                    <div class="bg-white rounded-[3rem] shadow-2xl p-12 max-w-lg w-full text-center border-b-[12px] ${win ? 'border-green-500' : 'border-red-500'}">
+                        <h2 class="text-6xl font-black mb-4 ${win ? 'text-green-600' : 'text-red-600'}">${win ? 'GESLAAGD' : 'GEZAKT'}</h2>
+                        <div class="bg-slate-50 py-10 rounded-3xl mb-8 border border-slate-200">
+                            <div class="text-8xl font-black text-slate-900 leading-none">${p}%</div>
+                            <p class="text-slate-500 font-bold mt-4 text-xl">Correct: ${score} / 35</p>
+                        </div>
+                        <button onclick="location.reload()" class="w-full bg-[#003082] text-white py-6 rounded-2xl font-black text-2xl hover:bg-blue-900 shadow-xl transition-all">OPNIEUW STARTEN</button>
+                    </div>
+                </div>`;
+        }
+
+        setup();
+    </script>
+</body>
+</html>
