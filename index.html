@@ -3,45 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staatsexamen NT2 B1 Simulator - Authentiek Niveau</title>
+    <title>Staatsexamen NT2 B1 - Uitgebreide Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .content-area { display: flex; flex: 1; overflow: hidden; border-top: 1px solid #e2e8f0; }
-        .text-pane { flex: 1; background: white; overflow-y: auto; padding: 3rem; line-height: 1.8; border-right: 2px solid #e2e8f0; }
-        .question-pane { width: 520px; background: #f1f5f9; overflow-y: auto; padding: 2.5rem; }
+        .text-pane { flex: 1; background: white; overflow-y: auto; padding: 4rem; line-height: 1.9; border-right: 2px solid #e2e8f0; font-size: 1.05rem; }
+        .question-pane { width: 550px; background: #f1f5f9; overflow-y: auto; padding: 2.5rem; }
         .opt-btn { width: 100%; text-align: left; padding: 1.25rem; margin-bottom: 0.75rem; border: 2px solid #cbd5e1; border-radius: 0.75rem; background: white; transition: all 0.2s; display: flex; align-items: flex-start; }
         .opt-btn:hover { border-color: #94a3b8; background: #f8fafc; }
         .opt-btn.active { border-color: #003082; background: #eff6ff; box-shadow: 0 0 0 2px #003082; }
         .status-dot { width: 10px; height: 10px; border-radius: 50%; margin: 0 2px; border: 1px solid #cbd5e1; }
         .status-dot.done { background: #10b981; border-color: #059669; }
         .status-dot.current { background: #003082; border-color: #003082; transform: scale(1.3); }
-        .review-card { border-left: 4px solid #cbd5e1; padding-left: 1rem; margin-bottom: 2rem; border-radius: 0.5rem; }
-        .review-correct { border-left-color: #10b981; background: #f0fdf4; }
-        .review-wrong { border-left-color: #ef4444; background: #fef2f2; }
-        h4 { color: #1e3a8a; font-weight: 800; margin-top: 1.8rem; margin-bottom: 0.75rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.4rem; font-size: 1.2rem; }
-        p { margin-bottom: 1.2rem; color: #334155; }
+        h4 { color: #1e3a8a; font-weight: 800; margin-top: 2rem; margin-bottom: 0.8rem; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.5rem; }
+        p { margin-bottom: 1.4rem; color: #334155; }
     </style>
 </head>
 <body>
 
-    <header id="main-header" class="bg-[#003082] text-white p-4 flex justify-between items-center shadow-lg">
+    <header id="main-header" class="bg-[#003082] text-white p-4 flex justify-between items-center shadow-md">
         <div class="flex items-center gap-4">
-            <h1 class="font-extrabold tracking-tighter text-xl uppercase italic">NT2-B1 Oefenexamen</h1>
+            <div class="bg-orange-500 text-xs font-black px-2 py-1 rounded">PROG I</div>
+            <h1 class="font-extrabold tracking-tight text-lg uppercase text-white">B1 Lezen Examen Oefenen - Made by M</h1>
         </div>
         <div class="flex items-center gap-6">
-            <div class="text-sm font-bold opacity-90">Vraag <span id="num-display">1</span> / 35</div>
-            <div id="timer-box" class="bg-black/20 px-4 py-1 rounded font-mono text-xl font-bold">110:00</div>
-            <button onclick="toggleGrid()" class="bg-white text-[#003082] px-4 py-1 rounded-md text-sm font-bold hover:bg-blue-50">Voortgang</button>
+            <div class="text-sm font-bold">Vraag <span id="num-display">1</span> / 35</div>
+            <div id="timer-box" class="bg-black/20 px-3 py-1 rounded font-mono text-xl font-bold">110:00</div>
+            <button onclick="toggleGrid()" class="bg-white text-[#003082] px-4 py-1 rounded-md text-sm font-bold hover:bg-blue-50">Navigatie</button>
         </div>
     </header>
 
     <main id="main-content" class="content-area">
         <div id="text-pane" class="text-pane">
-            <div class="bg-blue-50 text-[#003082] text-[10px] font-black px-3 py-1 rounded-full w-fit mb-4 uppercase tracking-widest">Leesvaardigheid B1</div>
-            <h2 id="view-text-title" class="text-3xl font-extrabold text-slate-900 mb-6 leading-tight"></h2>
-            <div id="view-text-body" class="prose prose-slate max-w-none"></div>
+            <h2 id="view-text-title" class="text-3xl font-extrabold text-slate-900 mb-8 leading-tight"></h2>
+            <div id="view-text-body" class="prose-slate"></div>
         </div>
         <div class="question-pane">
             <div id="q-container">
@@ -61,13 +58,13 @@
     <div id="grid-overlay" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-6">
         <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col shadow-2xl">
             <div class="p-6 border-b flex justify-between items-center bg-slate-50">
-                <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">Examen Overzicht</h2>
+                <h2 class="text-xl font-black text-slate-800">Examenoverzicht</h2>
                 <button onclick="toggleGrid()" class="text-3xl font-light">&times;</button>
             </div>
-            <div class="p-8 grid grid-cols-7 gap-3 overflow-y-auto" id="grid-content"></div>
+            <div class="p-8 grid grid-cols-7 gap-3" id="grid-content"></div>
             <div class="p-6 border-t bg-slate-50 flex justify-end gap-3">
-                <button onclick="toggleGrid()" class="px-6 py-2 font-bold text-slate-500 hover:text-slate-800">Terug naar tekst</button>
-                <button onclick="finishExam()" class="px-8 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">Inleveren</button>
+                <button onclick="toggleGrid()" class="px-6 py-2 font-bold text-slate-500">Sluiten</button>
+                <button onclick="finishExam()" class="px-8 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">Nu Inleveren</button>
             </div>
         </div>
     </div>
@@ -75,111 +72,101 @@
     <script>
         const EXAM_BANK = [
             {
-                title: "De Toekomst van Thuiswerken",
-                text: `<h4>Verschuiving op de arbeidsmarkt</h4><p>Sinds de wereldwijde pandemie is de visie op thuiswerken radicaal veranderd. Waar het voorheen vaak als een gunst van de werkgever werd beschouwd, eisen werknemers tegenwoordig meer flexibiliteit. Dit heeft geleid tot het zogenaamde 'hybride model', waarbij personeel een deel van de week op kantoor verschijnt en de rest vanuit huis werkt. Volgens experts bevordert dit de balans tussen werk en privé, mits de juiste faciliteiten aanwezig zijn.</p><h4>Sociale cohesie en productiviteit</h4><p>Toch waarschuwen psychologen voor de schaduwzijden. Het gebrek aan fysiek contact met collega's kan de creativiteit remmen en leiden tot een gevoel van isolatie. Bovendien vervaagt de grens tussen werkuren en vrije tijd, waardoor het risico op burn-out klachten toeneemt. Bedrijven worden daarom aangemoedigd om vaste kantoordagen in te plannen voor teamoverleg en sociale interactie.</p>`,
+                title: "De Flexibilisering van de Arbeidsmarkt",
+                text: `<h4>Historische verschuiving</h4><p>In de afgelopen decennia is de Nederlandse arbeidsmarkt getuige geweest van een ingrijpende transformatie. Waar een 'baan voor het leven' voorheen de maatschappelijke standaard was, domineert tegenwoordig de flexibele schil. Bedrijven moeten immers razendsnel kunnen opschalen bij piekdrukte en afschalen wanneer de internationale vraag inzakt. Dit vraagt om een grote mate van aanpassingsvermogen van de beroepsbevolking.</p><h4>Gevolgen voor de werknemer</h4><p>Hoewel werkgevers profiteren van deze wendbaarheid, ervaren veel werknemers, met name jongeren, een groeiende onzekerheid. Het ontbreken van een vast contract maakt het lastig om een hypotheek af te sluiten of een stabiele toekomst op te bouwen. Deskundigen waarschuwen dat deze stress op lange termijn nadelige gevolgen kan hebben voor het welzijn van de samenleving.</p><h4>De rol van de overheid</h4><p>De politiek worstelt met de vraag hoe zij deze 'flexwerkers' beter kan beschermen zonder de economische concurrentiepositie van Nederland te schaden. Er wordt nagedacht over nieuwe wetgeving die een balans moet vinden tussen de noodzaak van flexibiliteit voor ondernemers en sociale zekerheid voor de werkenden.</p>`,
                 questions: [
-                    { q: "Hoe werd thuiswerken vóór de pandemie meestal gezien?", o: ["Als een recht waar elke werknemer aanspraak op kon maken.", "Als een extraatje dat de werkgever kon toestaan.", "Als de standaardmanier van werken voor iedereen.", "Als een noodzakelijke maatregel om kosten te besparen."], c: 1 },
-                    { q: "Wat is volgens de tekst een voorwaarde voor een succesvol hybride model?", o: ["Dat werknemers minstens vier dagen op kantoor zijn.", "Dat de werkomgeving thuis goed is ingericht.", "Dat sociale contacten volledig digitaal plaatsvinden.", "Dat de werkgever alle beslissingen neemt over de uren."], c: 1 },
-                    { q: "Welk risico van thuiswerken wordt in de tweede alinea benadrukt?", o: ["Dat werknemers te weinig uren maken voor hun salaris.", "Dat de creatieve samenwerking tussen collega's verslechtert.", "Dat er te veel tijd verloren gaat aan overleg.", "Dat kantoorpanden overbodig worden."], c: 1 }
+                    { q: "Wat is volgens werkgevers het belangrijkste voordeel van flexwerk?", o: ["Het verlagen van de loonkosten voor de overheid.", "Het behouden van een sterke internationale handelspositie.", "Het verhogen van de loyaliteit van het personeel.", "Het stimuleren van pensioenopbouw onder jongeren."], c: 1 },
+                    { q: "Welk gevolg heeft flexwerk voor het privéleven van jonge werknemers?", o: ["Ze hebben meer tijd voor het opvoeden van hun kinderen.", "Ze stellen belangrijke levensbeslissingen uit door onzekerheid.", "Ze kunnen makkelijker een huis kopen in de grote stad.", "Ze hebben meer behoefte aan psychologische ondersteuning."], c: 1 },
+                    { q: "Wat is de kern van de politieke discussie over flexwerk?", o: ["Hoe men flexwerk volledig kan verbieden in Nederland.", "Het vinden van een balans tussen economie en sociale zekerheid.", "Het verhogen van de belastingen voor grote bedrijven.", "Het verplichten van een baan voor het leven voor iedereen."], c: 1 }
                 ]
             },
             {
-                title: "Verduurzaming van de Stad",
-                text: `<h4>Groene initiatieven</h4><p>De gemeente Amsterdam investeert fors in het 'vergroenen' van de binnenstad. Door het aanleggen van daktuinen en het vervangen van tegels door planten, hoopt men de effecten van hittestress te verminderen. Tijdens hete zomers blijft de warmte namelijk hangen tussen de dichte bebouwing, wat gezondheidsproblemen kan veroorzaken bij kwetsbare groepen. Bewoners worden gestimuleerd om ook hun eigen tuin of balkon aan te passen.</p><h4>De rol van de burger</h4><p>Hoewel de overheid de kaders schept, ligt de uiteindelijke verantwoordelijkheid bij de burger. Er zijn subsidies beschikbaar voor het isoleren van woningen en de aanschaf van warmtepompen. Echter, de administratieve rompslomp weerhoudt veel mensen ervan om de aanvraag daadwerkelijk in te dienen. Critici pleiten daarom voor een eenvoudiger systeem met directe kortingen aan de kassa.</p>`,
+                title: "Voedselverspilling en Consumentengedrag",
+                text: `<h4>De schaal van het probleem</h4><p>Voedselverspilling is een van de grootste ecologische uitdagingen van onze tijd. Alleen al in Nederland belandt jaarlijks voor miljarden euro's aan eetbaar voedsel in de vuilnisbak. Hoewel supermarkten en producenten vaak de schuld krijgen, blijkt uit onderzoek dat de grootste winst te behalen valt bij de consument thuis.</p><h4>Onwetendheid over houdbaarheid</h4><p>Een belangrijke oorzaak van deze verspilling is de verwarring rondom houdbaarheidsdata. Veel consumenten gooien producten weg zodra de THT-datum (Ten minste Houdbaar Tot) is verstreken, terwijl het product vaak nog dagen of zelfs weken veilig geconsumeerd kan worden. De THT-datum is namelijk een garantie voor kwaliteit, niet voor veiligheid.</p><h4>Gedragsverandering</h4><p>Om dit probleem aan te pakken, zijn er diverse campagnes gestart die consumenten leren weer te vertrouwen op hun eigen zintuigen: kijken, ruiken en proeven. Daarnaast wordt het plannen van maaltijden en het slim bewaren van restjes gepromoot als effectieve manieren om minder voedsel te verspillen.</p>`,
                 questions: [
-                    { q: "Waarom wil de gemeente meer planten in de stad?", o: ["Om de stad aantrekkelijker te maken voor toeristen.", "Om te voorkomen dat het in de zomer extreem warm blijft.", "Om meer ruimte te creëren voor nieuwe parkeerplaatsen.", "Om de verkoop van daktuinen te stimuleren."], c: 1 },
-                    { q: "Wat is volgens de tekst het grootste probleem bij de huidige subsidies?", o: ["De bedragen die de overheid geeft zijn veel te laag.", "Het proces om de subsidie te krijgen is te ingewikkeld.", "Er is bijna geen informatie over de regelingen te vinden.", "De subsidies zijn alleen voor mensen met een laag inkomen."], c: 1 },
-                    { q: "Wat stellen de 'critici' voor als oplossing?", o: ["Het stopzetten van alle subsidies voor isolatie.", "Een methode waarbij mensen direct minder betalen bij aankoop.", "Het verplicht stellen van warmtepompen voor elk huishouden.", "Het inhuren van meer ambtenaren voor de administratie."], c: 1 }
+                    { q: "Waar kan de meeste winst worden geboekt bij het verminderen van verspilling?", o: ["Bij de boeren die de producten verbouwen.", "In de keukens van de Nederlandse huishoudens.", "Bij de logistieke bedrijven die voedsel vervoeren.", "In de chemische fabrieken die verpakkingen maken."], c: 1 },
+                    { q: "Wat is de kern van het probleem met de THT-datum?", o: ["De datum wordt vaak verkeerd gedrukt door fabrikanten.", "Mensen denken ten onrechte dat het product daarna onveilig is.", "De kwaliteit van voedsel is direct na de datum heel slecht.", "Supermarkten mogen producten na die datum niet meer verkopen."], c: 1 },
+                    { q: "Wat is een aanbevolen methode om verspilling thuis te voorkomen?", o: ["Altijd meer eten koken dan nodig is.", "Vertrouwen op eigen zintuigen zoals ruiken en proeven.", "Alleen nog maar diepvriesproducten kopen.", "De koelkast op de koudste stand zetten."], c: 1 }
                 ]
             },
             {
-                title: "Vrijwillige Inzet in de Zorg",
-                text: `<h4>Een onmisbare schakel</h4><p>De druk op de professionele ouderenzorg neemt toe door de vergrijzing. Vrijwilligers worden steeds vaker ingezet om de kwaliteit van leven van bewoners te waarborgen. Hun taken variëren van het maken van een wandeling tot het ondersteunen bij de maaltijden. Het is echter cruciaal om te begrijpen dat vrijwilligers nooit de medische taken van verpleegkundigen mogen overnemen; zij zijn er puur voor de sociale ondersteuning en hand-en-spandiensten.</p><h4>Begeleiding en training</h4><p>Om de veiligheid van zowel de cliënt als de vrijwilliger te garanderen, bieden zorginstellingen introductiecursussen aan. Hierin leert men hoe om te gaan met dementie en hoe fysieke overbelasting te voorkomen. Een goede match tussen de interesses van de vrijwilliger en de behoeften van de bewoner is essentieel voor een langdurige samenwerking. Evaluaties wijzen uit dat dit contact ook voor de vrijwilliger zelf veel voldoening geeft.</p>`,
+                title: "Burgerparticipatie in de 'Doe-Democratie'",
+                text: `<h4>Een actieve samenleving</h4><p>In de afgelopen jaren is de term 'doe-democratie' steeds vaker te horen in de Nederlandse politiek. Gemeenten trekken zich vaker terug en verwachten dat burgers zelf initiatief tonen voor de verbetering van hun leefomgeving. Dit kan variëren van het onderhouden van een gezamenlijke buurttuin tot het organiseren van zorg voor ouderen in de wijk.</p><h4>Kansen en valkuilen</h4><p>Dit model biedt grote kansen voor de sociale samenhang en kan de gemeentebegroting ontlasten. Echter, sociologen waarschuwen ook voor een keerzijde. Er ontstaat een risico op ongelijkheid tussen wijken. Wijken met veel hoogopgeleide en mondige bewoners slagen er vaak beter in om projecten van de grond te krijgen dan wijken waar mensen kampen met andere zorgen.</p><h4>De rol van de overheid</h4><p>Het is essentieel dat de overheid niet alleen taken afstoot, maar ook ondersteuning blijft bieden waar dat nodig is. Zonder goede begeleiding en financiële ruggensteun voor de structurele kosten dreigen veel mooie burgerinitiatieven na verloop van tijd weer te verdwijnen.</p>`,
                 questions: [
-                    { q: "Waarom is de inzet van vrijwilligers in de zorg zo belangrijk?", o: ["Omdat zij goedkoper zijn dan gediplomeerde verpleegkundigen.", "Omdat de professionele zorg het werk niet meer alleen aankan.", "Omdat zij verantwoordelijk zijn voor het uitdelen van medicijnen.", "Omdat zij beslissen over de behandeling van de cliënten."], c: 1 },
-                    { q: "Wat wordt er gezegd over de grens van het vrijwilligerswerk?", o: ["Vrijwilligers mogen alleen werken als er geen verpleegkundige is.", "Medische handelingen blijven de taak van professionals.", "Vrijwilligers moeten na een jaar stoppen met hun werk.", "Vrijwilligers bepalen zelf welke taken ze uitvoeren."], c: 1 },
-                    { q: "Wat is het doel van de cursussen voor vrijwilligers?", o: ["Zorgen dat zij sneller een baan in de zorg kunnen vinden.", "Kennis bijbrengen over het omgaan met specifieke ziektebeelden.", "Het controleren of de vrijwilliger wel hard genoeg werkt.", "Het besparen op kosten voor externe trainingsbureaus."], c: 1 }
+                    { q: "Waarom is burgerparticipatie gunstig voor de gemeente?", o: ["Burgers kunnen dan zelf nieuwe wetten schrijven.", "Het bespaart geld en vergroot de betrokkenheid van bewoners.", "Belastingen hoeven dan niet meer geïnd te worden.", "Ambtenaren hebben hierdoor meer tijd voor vakantie."], c: 1 },
+                    { q: "Welk risico noemen sociologen bij de 'doe-democratie'?", o: ["Dat burgers de macht van de burgemeester overnemen.", "Dat er grote kwaliteitsverschillen tussen wijken ontstaan.", "Dat de landelijke regelgeving te soepel wordt.", "Dat hoogopgeleiden helemaal geen interesse hebben."], c: 1 },
+                    { q: "Wat is vaak een reden dat projecten op de lange termijn mislukken?", o: ["De deelnemers krijgen na een week al ruzie met elkaar.", "Er is geen geld voor de blijvende, structurele kosten.", "De subsidie van de gemeente was vanaf het begin te hoog.", "Bewoners wilden uiteindelijk toch liever parkeerplaatsen."], c: 1 }
                 ]
             },
             {
-                title: "De Kracht van de Kringloop",
-                text: `<h4>Tweedehands als trend</h4><p>De populariteit van kringloopwinkels is de afgelopen jaren enorm gestegen. Dit heeft niet alleen te maken met de lagere prijzen, maar ook met een groeiend milieubewustzijn. Consumenten realiseren zich dat de productie van nieuwe goederen, zoals kleding en elektronica, een enorme impact heeft op de aarde. Door hergebruik te stimuleren, wordt de afvalberg verkleind en worden grondstoffen bespaard.</p><h4>Sociale werkgelegenheid</h4><p>Naast de ecologische voordelen hebben veel kringloopbedrijven een sociale missie. Ze bieden werkplekken aan mensen die elders op de arbeidsmarkt moeilijk aan de bak komen. Hierbij valt te denken aan langdurig werklozen of mensen met een arbeidsbeperking. Onder professionele begeleiding leren zij vaardigheden die de kans op een reguliere baan vergroten. De winst van de winkel vloeit vaak terug naar maatschappelijke projecten.</p>`,
+                title: "Digitalisering in de Gezondheidszorg",
+                text: `<h4>De noodzaak van technologische innovatie</h4><p>De Nederlandse gezondheidszorg staat onder grote druk door de vergrijzing en het tekort aan personeel. Om de zorg in de toekomst toegankelijk en betaalbaar te houden, wordt er volop ingezet op digitalisering en e-health. Denk hierbij aan consulten via beeldbellen of apps waarmee patiënten zelf hun bloeddruk kunnen monitoren.</p><h4>De digitale kloof</h4><p>Hoewel deze technieken de zelfredzaamheid van veel patiënten vergroten, schuilt er ook een gevaar in. Niet iedereen is even digitaal vaardig. Vooral ouderen en mensen met een lagere opleiding dreigen buiten de boot te vallen als de zorg uitsluitend nog via digitale wegen bereikbaar is.</p><h4>Privacy en vertrouwen</h4><p>Daarnaast is de beveiliging van medische gegevens een cruciaal punt. Patiënten moeten er blindelings op kunnen vertrouwen dat hun privacy gewaarborgd blijft. Artsen benadrukken dat technologie nooit de menselijke maat mag vervangen; het moet juist een middel zijn om meer tijd vrij te maken voor het echte persoonlijke contact in de spreekkamer.</p>`,
                 questions: [
-                    { q: "Wat is een belangrijke reden dat mensen naar de kringloop gaan?", o: ["Omdat de kwaliteit van de spullen altijd beter is dan nieuw.", "Vanwege een combinatie van prijs en zorg voor het milieu.", "Omdat het verboden is om nieuwe kleding te kopen.", "Omdat de winkels altijd in de buurt van een park zijn."], c: 1 },
-                    { q: "Welke 'sociale missie' hebben veel van deze winkels?", o: ["Het gratis weggeven van spullen aan iedereen die dat wil.", "Het helpen van mensen met een afstand tot de arbeidsmarkt.", "Het organiseren van feesten voor de hele buurt.", "Het vervangen van grote commerciële supermarkten."], c: 1 },
-                    { q: "Wat gebeurt er meestal met de winst van een kringloopwinkel?", o: ["De winst gaat direct naar de overheid als belasting.", "Het geld wordt geïnvesteerd in goede doelen of projecten.", "De werknemers krijgen een extra hoog salaris.", "De winst wordt gebruikt om nieuwe producten te importeren."], c: 1 }
+                    { q: "Wat is een voordeel van e-health voor de patiënt volgens de tekst?", o: ["De patiënt hoeft nooit meer met een arts te praten.", "De patiënt krijgt meer controle over het eigen zorgtraject.", "De zorgkosten voor de patiënt worden direct gehalveerd.", "De patiënt krijgt gratis toegang tot sneller internet."], c: 1 },
+                    { q: "Welk maatschappelijk gevaar schuilt er in de digitalisering van de zorg?", o: ["Dat ziekenhuizen veel minder personeel hoeven aan te nemen.", "Dat er een kloof ontstaat tussen digitaal vaardige en minder vaardige mensen.", "Dat patiënten veel vaker naar de huisarts zullen gaan.", "Dat de overheid alle medische gegevens openbaar zal maken."], c: 1 },
+                    { q: "Wat is de ideale rol van technologie volgens de artsen in de tekst?", o: ["Het volledig overnemen van alle medische diagnoses.", "Het vrijmaken van tijd voor persoonlijk contact met de patiënt.", "Het vervangen van de fysieke huisartsenposten in de wijken.", "Het verminderen van het totale medicijngebruik in Nederland."], c: 1 }
                 ]
             },
             {
-                title: "Onderwijs en Digitalisering",
-                text: `<h4>De laptop in de klas</h4><p>In het moderne onderwijs is de computer niet meer weg te denken. Veel scholen kiezen voor 'gepersonaliseerd leren', waarbij software zich aanpast aan het niveau van de leerling. Dit stelt snelle leerlingen in staat om vooruit te werken, terwijl leerlingen die meer moeite hebben extra uitleg en oefeningen krijgen. De docent krijgt hierdoor een coachende rol en heeft meer tijd voor individuele begeleiding.</p><h4>Schermtijd en concentratie</h4><p>Er klinkt echter ook kritiek. Te veel schermtijd zou ten koste gaan van de concentratie en de fijne motoriek, zoals het handschrift. Bovendien is er bezorgdheid over de afhankelijkheid van commerciële softwareleveranciers. Wetenschappers adviseren daarom een 'blended' aanpak: een gezonde mix tussen digitale middelen en traditionele methodes zoals boeken en fysieke samenwerking in de klas.</p>`,
+                title: "Meertaligheid op de Basisschool",
+                text: `<h4>Een verschuiving in het onderwijs</h4><p>Jarenlang heerste de opvatting dat kinderen met een migratieachtergrond thuis uitsluitend Nederlands moesten spreken om hun schoolprestaties te verbeteren. Leraren adviseerden ouders vaak om hun eigen taal te negeren. Recente wetenschappelijke inzichten hebben dit beeld echter volledig gekanteld.</p><h4>De waarde van de moedertaal</h4><p>Onderzoek toont aan dat een sterke basis in de moedertaal juist cruciaal is voor het leren van een tweede taal, zoals het Nederlands. Wanneer een kind de concepten in de eigen taal goed begrijpt, kan het deze makkelijker vertalen naar een nieuwe taal. Bovendien ontwikkelen meertalige kinderen vaak een grotere mentale flexibiliteit en een beter probleemoplossend vermogen.</p><h4>Een inclusieve aanpak</h4><p>Tegenwoordig wordt meertaligheid op veel scholen juist gezien als een rijkdom. In plaats van de thuistaal te verbieden, wordt er gezocht naar manieren om deze een plek te geven in de klas. Dit versterkt het zelfvertrouwen van de leerlingen en zorgt ervoor dat zij zich sneller thuis voelen in het Nederlandse onderwijssysteem.</p>`,
                 questions: [
-                    { q: "Wat is een voordeel van de software bij gepersonaliseerd leren?", o: ["Alle leerlingen maken precies dezelfde opdrachten op hetzelfde tempo.", "Het programma past de moeilijkheidsgraad aan de leerling aan.", "De docent hoeft zelf geen uitleg meer te geven aan de klas.", "Leerlingen hoeven niet meer naar school te komen."], c: 1 },
-                    { q: "Hoe verandert de rol van de docent door deze digitalisering?", o: ["De docent wordt minder belangrijk voor de leerlingen.", "De docent kan zich meer richten op persoonlijke hulp.", "De docent moet alle software zelf programmeren.", "De docent controleert alleen nog maar of de computers aanstaan."], c: 1 },
-                    { q: "Wat wordt bedoeld met een 'blended' aanpak?", o: ["Alleen nog maar werken met computers in de klas.", "Een combinatie van digitale en ouderwetse leermiddelen.", "Het mengen van verschillende klassen op basis van leeftijd.", "Het verbieden van alle schermen tijdens de pauze."], c: 1 }
+                    { q: "Wat was vroeger het standaardadvies aan anderstalige ouders?", o: ["Dat leraren het gebruik van de thuistaal moesten stimuleren.", "Dat het spreken van de thuistaal de ontwikkeling van het Nederlands hinderde.", "Dat iedereen verplicht was om minimaal drie talen te leren.", "Dat de thuistaal alleen in het weekend gesproken mocht worden."], c: 1 },
+                    { q: "Wat is volgens modern onderzoek de functie van de moedertaal?", o: ["Het zorgt voor onherstelbare taalfouten in het Nederlands.", "Het dient als een noodzakelijke basis voor het leren van een tweede taal.", "Het is minder belangrijk geworden door de komst van internet.", "Het moet zo snel mogelijk worden vervangen door Engels."], c: 1 },
+                    { q: "Welk cognitief voordeel van meertaligheid wordt in de tekst genoemd?", o: ["Het ontwikkelen van een fotografisch geheugen.", "Een grotere mentale flexibiliteit bij het oplossen van problemen.", "Het sneller kunnen leren schrijven van lange teksten.", "Een vermindering van de behoefte aan logisch redeneren."], c: 1 }
                 ]
             },
             {
-                title: "Veilig Internetgebruik",
-                text: `<h4>Cybercriminaliteit</h4><p>Met de toename van online winkelen en bankieren groeit ook het risico op internetfraude. Phishing is een veelvoorkomende methode waarbij criminelen via e-mail proberen inloggegevens te stelen. Ze doen zich vaak voor als een betrouwbare instantie, zoals de bank of de belastingdienst. Het is essentieel om nooit op verdachte links te klikken en altijd het webadres te controleren voordat men persoonlijke informatie invoert.</p><h4>Wachtwoordbeheer</h4><p>Een sterk wachtwoord is de eerste verdedigingslinie. Experts raden aan om voor elke website een unieke combinatie van letters, cijfers en symbolen te gebruiken. Omdat dit lastig te onthouden is, kan een 'wachtwoordmanager' uitkomst bieden. Daarnaast biedt tweestapsverificatie extra beveiliging; hierbij is naast het wachtwoord ook een code nodig die naar de mobiele telefoon wordt gestuurd.</p>`,
+                title: "Consumentenpsychologie in de Supermarkt",
+                text: `<h4>De geheimen van de winkelvloer</h4><p>Wanneer we een supermarkt binnenlopen, denken we vaak dat we rationele beslissingen nemen. In werkelijkheid worden onze keuzes beïnvloed door een subtiel samenspel van geuren, muziek en de strategische indeling van de winkel. Marketeers weten precies hoe ze onze zintuigen moeten prikkelen om ons meer te laten kopen dan gepland.</p><h4>Slimme indelingen</h4><p>Het is geen toeval dat basisproducten zoals melk en brood vaak helemaal achterin de winkel liggen. De klant wordt hierdoor gedwongen om langs talloze andere schappen te lopen, wat de kans op impulsaankopen aanzienlijk vergroot. Ook de hoogte waarop producten in het schap staan is cruciaal: de duurste merken staan vaak op ooghoogte, terwijl de budgetvarianten onderin te vinden zijn.</p><h4>Prijsbeleving en schaarste</h4><p>Daarnaast wordt er veel gebruikgemaakt van psychologische prijzen en het creëren van een gevoel van schaarste. Acties zoals 'op is op' of 'maximaal 2 per klant' suggereren dat een product zeer gewild is, waardoor consumenten sneller geneigd zijn het in hun karretje te leggen. Ook het tonen van een hoge 'adviesprijs' naast een kortingsprijs (het zogenaamde ankeren) laat ons denken dat we een geweldige deal scoren.</p>`,
                 questions: [
-                    { q: "Hoe gaan criminelen bij 'phishing' meestal te werk?", o: ["Ze breken fysiek in bij het kantoorgebouw van een bank.", "Ze sturen valse berichten om gegevens te stelen.", "Ze blokkeren de hele internetverbinding van een stad.", "Ze verkopen illegale software in een gewone winkel."], c: 1 },
-                    { q: "Wat is een nadeel van het hebben van veel unieke wachtwoorden?", o: ["Het is verboden door de meeste internetproviders.", "Het is moeilijk om ze allemaal te onthouden.", "Wachtwoorden met symbolen werken vaak niet.", "Het maakt je computer veel trager."], c: 1 },
-                    { q: "Wat is de functie van tweestapsverificatie?", o: ["Het automatisch veranderen van je wachtwoord elke week.", "Een extra controle via je telefoon om in te loggen.", "Het controleren of je wel een legaal abonnement hebt.", "Het sneller maken van de internetverbinding."], c: 1 }
+                    { q: "Waarom liggen melk en brood vaak achterin de supermarkt?", o: ["Omdat deze producten daar beter gekoeld kunnen worden.", "Om de klant langs zoveel mogelijk andere producten te leiden.", "Omdat er daar meer ruimte is voor de eigen bakkerij.", "Om de overlast voor het winkelpersoneel te minimaliseren."], c: 1 },
+                    { q: "Wat probeert een supermarkt te bereiken met 'maximaal 3 per klant'?", o: ["Een eerlijke verdeling van de voorraad over alle klanten.", "Het suggereren dat het product heel gewild en schaars is.", "Het beschermen van de algemene gezondheid van de klant.", "Het controleren van de dagelijkse uitgaven van de consument."], c: 1 },
+                    { q: "Wat wordt in de tekst bedoeld met 'ankeren' bij prijzen?", o: ["Het vastzetten van de prijzen voor een heel jaar.", "Een hoge startprijs tonen zodat de korting groter lijkt.", "Het hanteren van de laagste prijs in de gehele markt.", "Het volgen van de internationale marktprijzen."], c: 1 }
                 ]
             },
             {
-                title: "Gezonde Voeding op School",
-                text: `<h4>De gezonde kantine</h4><p>Steeds meer middelbare scholen bannen frisdrank en vette snacks uit hun kantines. In plaats daarvan worden fruit, volkorenbroodjes en water aangeboden. Het idee is dat een gezonde lunch bijdraagt aan betere leerprestaties en minder energiedips in de middag. Hoewel sommige leerlingen klagen over het gebrek aan keuze, blijkt uit onderzoek dat ze sneller gezonde keuzes maken als het aanbod beperkt is tot goede alternatieven.</p><h4>Educatie en bewustwording</h4><p>Alleen het aanpassen van het assortiment is niet voldoende. Scholen besteden ook in de lessen aandacht aan de herkomst van voedsel en de impact van suiker op het lichaam. Kooklessen waarbij leerlingen zelf leren om verse maaltijden te bereiden, zijn populair en effectief. Het doel is om jongeren vaardigheden mee te geven waar ze de rest van hun leven profijt van hebben in hun eigen huishouden.</p>`,
+                title: "De Impact van Duurzame Mode",
+                text: `<h4>De schaduwkant van Fast Fashion</h4><p>De mode-industrie is tegenwoordig een van de meest vervuilende sectoren ter wereld. Door de opkomst van 'fast fashion' kopen consumenten steeds meer kleding tegen bodemprijzen. Deze kledingstukken zijn vaak van lage kwaliteit en worden na slechts enkele keren dragen weer weggegooid. Dit leidt tot een enorme afvalberg en een gigantisch waterverbruik tijdens de productie.</p><h4>Een noodzakelijke verschuiving</h4><p>Gelukkig groeit het bewustzijn onder consumenten. Er is een duidelijke trend zichtbaar waarbij mensen vaker kiezen voor kwaliteit boven kwantiteit. 'Slow fashion' moedigt aan om te investeren in tijdloze kledingstukken die jarenlang meegaan. Ook de markt voor tweedehands kleding is de laatste jaren geëxplodeerd, mede dankzij handige apps en hippe vintage winkels.</p><h4>De rol van innovatie</h4><p>Daarnaast wordt er geëxperimenteerd met nieuwe materialen, zoals stoffen gemaakt van gerecyclede plastic flessen of plantaardige vezels. Experts stellen dat een circulaire economie, waarin kleding volledig gerecycled kan worden, de enige manier is om de mode-industrie toekomstbestendig te maken. Dit vraagt echter om een grote gedragsverandering van zowel producenten als consumenten.</p>`,
                 questions: [
-                    { q: "Wat is volgens de tekst een effect van een gezonde lunch?", o: ["Leerlingen worden sneller moe in de middag.", "De concentratie van de leerlingen verbetert.", "Scholen kunnen meer geld verdienen aan de kantine.", "Leerlingen hoeven minder huiswerk te maken."], c: 1 },
-                    { q: "Hoe reageren leerlingen op de veranderingen in de kantine?", o: ["Ze zijn allemaal meteen heel enthousiast.", "Sommigen vinden het jammer dat er minder keus is.", "Ze weigeren voortaan om op school te eten.", "Ze nemen zelf frisdrank mee voor de hele klas."], c: 1 },
-                    { q: "Wat is het langetermijndoel van de kooklessen?", o: ["Dat leerlingen later professioneel kok worden.", "Dat leerlingen later zelfstandig gezond kunnen koken.", "Het verkopen van kookboeken die door de school zijn gemaakt.", "Het besparen op de kosten van de schoolcatering."], c: 1 }
+                    { q: "Wat is een kenmerk van 'fast fashion' volgens de tekst?", o: ["Het is kleding die generaties lang meegaat.", "Het is goedkoop geproduceerd en vaak van lage kwaliteit.", "Het wordt uitsluitend verkocht in luxe boetieks.", "Het is altijd gemaakt van 100% biologisch katoen."], c: 1 },
+                    { q: "Waarom is de huidige mode-industrie zo schadelijk voor het milieu?", o: ["Omdat er te veel reclame wordt gemaakt voor nieuwe collecties.", "Vanwege het enorme waterverbruik en de grote afvalproductie.", "Omdat de modellen te veel moeten reizen voor fotoshoots.", "Omdat kledingwinkels te veel elektriciteit verbruiken."], c: 1 },
+                    { q: "Wat is een oplossing voor de milieuproblemen in de mode-industrie?", o: ["Het stimuleren van consumenten om meer kleding weg te gooien.", "Het kopen van tweedehands kleding en investeren in kwaliteit.", "Het alleen nog maar kopen van kleding in de wintermaanden.", "Het vaker wassen van kleding op zeer hoge temperaturen."], c: 1 }
                 ]
             },
             {
-                title: "Stedelijke Mobiliteit",
-                text: `<h4>Deelmobiliteit</h4><p>In grote steden zien we een verschuiving van eigen autobezit naar 'deelmobiliteit'. Via apps kunnen burgers eenvoudig een elektrische fiets, scooter of auto huren voor een korte rit. Dit vermindert de parkeerdruk en de uitstoot van schadelijke stoffen. Echter, de rondslingerende voertuigen op de stoep zorgen voor ergernis bij voetgangers en mensen met een beperking. Gemeenten zoeken naar oplossingen door vaste parkeervakken aan te wijzen.</p><h4>Openbaar Vervoer</h4><p>Ondanks de populariteit van deelfietsen blijft het openbaar vervoer (OV) de ruggengraat van de stad. Om het OV aantrekkelijk te houden, wordt er geïnvesteerd in snellere verbindingen en een hogere frequentie. Een punt van zorg zijn de stijgende ticketprijzen, waardoor het voor mensen met een klein budget soms lastig is om de stad te doorkruisen. Er wordt gesproken over sociale tarieven voor minima.</p>`,
+                title: "Slaap als Fundament voor Gezondheid",
+                text: `<h4>De biologische functie van rust</h4><p>Slaap wordt vaak gezien als een passieve toestand, maar in werkelijkheid is het brein gedurende de nacht uiterst actief. Tijdens de verschillende slaapfases herstelt ons lichaam van fysieke inspanningen en worden de indrukken van de dag verwerkt en opgeslagen in het geheugen. Een goede nachtrust is dus essentieel voor zowel onze fysieke als mentale gezondheid.</p><h4>De gevaren van slaaptekort</h4><p>In onze moderne 24-uurseconomie schiet slaap er echter vaak bij in. Chronisch slaaptekort heeft ernstige gevolgen: het leidt tot concentratieproblemen, stemmingswisselingen en een verzwakt immuunsysteem. Op de lange termijn verhoogt het zelfs het risico op hart- en vaatziekten en burn-out. Deskundigen maken zich vooral zorgen over de invloed van blauw licht van smartphones.</p><h4>Tips voor een betere nachtrust</h4><p>Om de kwaliteit van de slaap te verbeteren, is het belangrijk om een vast ritme aan te houden en de slaapkamer koel en donker te houden. Ook wordt geadviseerd om minstens een uur voor het slapengaan alle schermen uit te zetten, omdat het blauwe licht de aanmaak van het slaaphormoon melatonine verstoort. Een korte wandeling in de avondlucht kan ook wonderen doen.</p>`,
                 questions: [
-                    { q: "Wat is een voordeel van deelmobiliteit?", o: ["Iedereen krijgt een gratis elektrische scooter van de gemeente.", "Er zijn minder eigen auto's nodig, wat ruimte bespaart.", "Je hoeft geen rijbewijs meer te hebben voor een deelauto.", "De voertuigen mogen overal op de stoep geparkeerd worden."], c: 1 },
-                    { q: "Welk nadeel van deelvoertuigen wordt in de tekst genoemd?", o: ["Ze zijn veel langzamer dan gewone fietsen.", "Ze staan soms op plekken waar ze in de weg staan.", "De batterijen zijn altijd leeg als je ze nodig hebt.", "Je kunt ze alleen huren als je in de stad woont."], c: 1 },
-                    { q: "Waarom maken sommige mensen zich zorgen over het OV?", o: ["Omdat de treinen en bussen te vaak leeg rijden.", "Vanwege de hoge kosten voor reizigers met weinig geld.", "Omdat er geen wifi aanwezig is in de voertuigen.", "Omdat de chauffeurs niet vriendelijk genoeg zouden zijn."], c: 1 }
+                    { q: "Wat is de belangrijkste taak van het brein tijdens de slaap?", o: ["Het brein stopt volledig met functioneren om uit te rusten.", "Het verwerkt en ordent de informatie van de afgelopen dag.", "Het stimuleert de aanmaak van nieuwe vetcellen in het lichaam.", "Het wist alle vervelende herinneringen automatisch uit."], c: 1 },
+                    { q: "Wat is volgens de tekst het effect van blauw licht op onze slaap?", o: ["Het zorgt ervoor dat we sneller in een diepe slaap vallen.", "Het blokkeert de productie van het noodzakelijke slaaphormoon.", "Het verbetert de kwaliteit van onze dromen aanzienlijk.", "Het heeft volgens wetenschappers geen enkele invloed."], c: 1 },
+                    { q: "Welk gezondheidsrisico wordt genoemd bij langdurig slaaptekort?", o: ["Een verbetering van het korte-termijngeheugen.", "Een verhoogde kans op concentratieproblemen en ziektes.", "Een afname van het algemene hongergevoel overdag.", "Het vermogen om fysiek veel sneller te kunnen reageren."], c: 1 }
                 ]
             },
             {
-                title: "Consumptie en Marketing",
-                text: `<h4>De invloed van reclame</h4><p>We worden dagelijks blootgesteld aan duizenden reclame-uitingen, zowel op straat als online. Bedrijven gebruiken geavanceerde algoritmes om advertenties te tonen die precies aansluiten bij onze zoekgeschiedenis en interesses. Dit kan leiden tot impulsaankopen: producten die we eigenlijk niet nodig hebben, maar die op dat moment heel verleidelijk lijken. Vooral jongeren zijn gevoelig voor de invloed van 'influencers' op sociale media.</p><h4>Bewust consumeren</h4><p>Er ontstaat een tegenbeweging van mensen die kiezen voor 'minimalisme'. Zij proberen bewust minder spullen te kopen en te focussen op ervaringen in plaats van bezit. Dit is niet alleen goed voor de portemonnee, maar ook voor de geestelijke gezondheid, omdat een opgeruimd huis vaak zorgt voor een opgeruimd hoofd. Kritisch kijken naar de noodzaak van een aankoop is hierbij de belangrijkste stap.</p>`,
+                title: "De Toekomst van Kunstmatige Intelligentie",
+                text: `<h4>Een technologische revolutie</h4><p>Kunstmatige Intelligentie (AI) is niet langer iets uit sciencefictionfilms; het is inmiddels diep doorgedrongen in ons dagelijks leven. We gebruiken het voor het vertalen van teksten, het filteren van spam in onze mailbox en het krijgen van gepersonaliseerde aanbevelingen op streamingdiensten. In de medische wereld helpt AI artsen zelfs bij het sneller opsporen van ziektes op scans.</p><h4>Kansen voor de economie</h4><p>Voorstanders wijzen op de enorme efficiëntieverbeteringen die AI kan brengen. Repetitief en zwaar werk kan door machines worden overgenomen, waardoor mensen hun tijd kunnen besteden aan creatievere en socialere taken. Dit zou kunnen leiden tot een nieuwe golf van economische groei en innovatie in sectoren zoals de landbouw en het transport.</p><h4>Ethische vraagstukken</h4><p>Tegelijkertijd zijn er grote zorgen over de schaduwkanten. Critici waarschuwen voor massaal banenverlies en de verspreiding van desinformatie via 'deepfakes'. Ook de betrouwbaarheid van AI-systemen is een punt van discussie: omdat deze systemen getraind worden met data uit het verleden, kunnen zij onbewust vooroordelen overnemen. Het is aan de politiek om duidelijke regels op te stellen voor het veilig gebruik van deze technologie.</p>`,
                 questions: [
-                    { q: "Hoe weten bedrijven welke advertenties ze aan jou moeten tonen?", o: ["Ze gokken op basis van je leeftijd en woonplaats.", "Ze gebruiken gegevens over wat je eerder online hebt opgezocht.", "Ze vragen je elke dag om een lijstje met interesses te maken.", "Ze laten gewoon aan iedereen precies dezelfde reclame zien."], c: 1 },
-                    { q: "Wat is een 'impulsaankoop'?", o: ["Een aankoop die je al maanden van plan was te doen.", "Iets wat je koopt zonder er goed over na te denken.", "Een aankoop die je doet via een ouderwetse krantenadvertentie.", "Het kopen van producten die alleen in de aanbieding zijn."], c: 1 },
-                    { q: "Wat is volgens de tekst een psychologisch voordeel van minimalisme?", o: ["Je kunt al je geld uitgeven aan dure vakanties.", "Minder spullen in huis zorgt voor meer rust in je hoofd.", "Je krijgt meer volgers op je sociale media kanalen.", "Je hoeft nooit meer schoon te maken."], c: 1 }
+                    { q: "In welke sector helpt AI momenteel al bij het stellen van diagnoses?", o: ["In de internationale scheepvaart.", "In de medische wereld via het bekijken van scans.", "In de kinderopvang bij het kiezen van spelletjes.", "In de bouwsector bij het metselen van muren."], c: 1 },
+                    { q: "Wat is een belangrijke angst die mensen hebben over AI?", o: ["Dat de internetsnelheid wereldwijd zal afnemen.", "Dat er op grote schaal banen verloren zullen gaan.", "Dat computers in de toekomst veel duurder worden.", "Dat er minder boeken geschreven zullen worden."], c: 1 },
+                    { q: "Waarom is de betrouwbaarheid van AI een zorgpunt?", o: ["Omdat AI nooit toegang heeft tot het internet.", "Omdat systemen vooroordelen uit oude data kunnen overnemen.", "Omdat computers alleen goed werken als ze splinternieuw zijn.", "Omdat AI-systemen weigeren om lange teksten te lezen."], c: 1 }
                 ]
             },
             {
-                title: "Cultuur en Identiteit",
-                text: `<h4>Tradities in beweging</h4><p>Cultuur is geen statisch gegeven, maar verandert voortdurend onder invloed van migratie en globalisering. Oude tradities krijgen nieuwe vormen en er ontstaan nieuwe gewoontes. In Nederland zien we dit bijvoorbeeld terug in de keuken, waar gerechten uit alle windstreken inmiddels als 'typisch Nederlands' worden beschouwd. Deze uitwisseling verrijkt de samenleving, maar zorgt soms ook voor discussie over het behoud van de eigen identiteit.</p><h4>Musea en erfgoed</h4><p>Musea spelen een belangrijke rol bij het bewaren van ons gezamenlijke verleden. Zij beheren kunstschatten en historische voorwerpen die ons vertellen waar we vandaan komen. Tegenwoordig proberen musea ook vaker de verhalen te vertellen van groepen die voorheen onderbelicht bleven. Hierdoor ontstaat een completer en eerlijker beeld van de geschiedenis, wat bijdraagt aan meer onderling begrip tussen verschillende bevolkingsgroepen.</p>`,
+                title: "Nederlandse Fietsinitiatieven",
+                text: `<h4>De fietscultuur in beweging</h4><p>Nederland staat wereldwijd bekend als hét fietsland bij uitstek. Toch zit de overheid niet stil. Om de alsmaar groeiende files op de snelwegen aan te pakken en de CO2-uitstoot te verminderen, wordt er de laatste jaren fors geïnvesteerd in zogenaamde 'snelfietspaden'. Dit zijn brede, geasfalteerde routes zonder stoplichten die steden met elkaar verbinden.</p><h4>Voordelen voor forenzen</h4><p>Deze fietssnelwegen maken het voor forenzen aantrekkelijker om de auto te laten staan, zeker nu de elektrische fiets steeds populairder wordt. Reizen van 15 tot 20 kilometer zijn hiermee prima te overbruggen. Het resultaat is niet alleen een betere luchtkwaliteit in de steden, maar ook fitte en productievere werknemers die met minder stress op hun werk verschijnen.</p><h4>Toekomstige uitdagingen</h4><p>Hoewel de snelfietspaden een groot succes zijn, ontstaan er ook nieuwe uitdagingen. De snelheidsverschillen op het fietspad tussen gewone fietsen en snelle e-bikes zorgen soms voor onveilige situaties. Gemeenten onderzoeken nu of er aparte banen moeten komen of dat er een maximale snelheid op drukke fietspaden moet worden ingevoerd.</p>`,
                 questions: [
-                    { q: "Wat wordt in de tekst gezegd over cultuur?", o: ["Het is iets dat altijd precies hetzelfde moet blijven.", "Het verandert constant door invloeden van buitenaf.", "Het wordt alleen bepaald door de overheid.", "Het heeft niets te maken met eten of tradities."], c: 1 },
-                    { q: "Welke ontwikkeling zien we bij moderne musea?", o: ["Ze tonen alleen nog maar moderne kunstwerken.", "Ze besteden aandacht aan verhalen die vroeger niet verteld werden.", "Ze zijn gratis geworden voor alle inwoners van het land.", "Ze stoppen met het verzamelen van historische voorwerpen."], c: 1 },
-                    { q: "Wat is het effect van een 'eerlijker beeld' van de geschiedenis?", o: ["Mensen krijgen meer ruzie over wie er gelijk heeft.", "Het zorgt ervoor dat mensen elkaar beter gaan begrijpen.", "Het maakt de geschiedenisles op school een stuk korter.", "Het is alleen interessant voor wetenschappers."], c: 1 }
+                    { q: "Wat is het hoofddoel van de aanleg van 'snelfietspaden'?", o: ["Het creëren van parkeerplaatsen voor elektrische steps.", "Een snel en vlot alternatief bieden voor de auto in het woon-werkverkeer.", "Het organiseren van professionele wielerwedstrijden door de stad.", "Het verhogen van de toeristische waarde van de natuurgebieden."], c: 1 },
+                    { q: "Welk voordeel voor werknemers wordt in de tekst genoemd?", o: ["Zij krijgen van de baas een gratis elektrische fiets.", "Zij ervaren minder stress en zijn fysiek fitter.", "Zij mogen onderweg gratis gebruikmaken van internet.", "Zij hoeven nooit meer te betalen voor het openbaar vervoer."], c: 1 },
+                    { q: "Welk probleem wordt genoemd als gevolg van het succes?", o: ["Er zijn te weinig fietsenmakers in de grote steden.", "Onveilige situaties door grote snelheidsverschillen op het pad.", "De fietspaden worden te duur om te onderhouden.", "Mensen willen toch liever met de bus naar hun werk."], c: 1 }
                 ]
             },
             {
-                title: "Het Belang van Slaap",
-                text: `<h4>Functies van de nachtrust</h4><p>Slaap wordt vaak onderschat, terwijl het essentieel is voor het herstel van lichaam en geest. Tijdens de slaap verwerkt het brein de indrukken van de dag en worden cellen in het lichaam gerepareerd. Mensen die chronisch te weinig slapen, hebben een verhoogd risico op hart- en vaatziekten, overgewicht en depressie. Een volwassene heeft gemiddeld zeven tot acht uur kwalitatieve slaap per nacht nodig om optimaal te kunnen functioneren.</p><h4>Slaaphygiëne</h4><p>Om de kwaliteit van de slaap te verbeteren, is een goede 'slaaphygiëne' van belang. Dit houdt in dat men een vast ritme aanhoudt en cafeïne vermijdt in de avonduren. Ook het blauwe licht van telefoons en tablets verstoort de aanmaak van het slaaphormoon melatonine. Deskundigen raden aan om minstens een uur voor het slapengaan alle schermen uit te schakelen en te kiezen voor een ontspannende activiteit zoals lezen.</p>`,
+                title: "De Onmisbare Rol van Vrijwilligers",
+                text: `<h4>Het cement van de samenleving</h4><p>Zonder de inzet van miljoenen vrijwilligers zou Nederland er heel anders uitzien. Vrijwilligers zijn actief in bijna alle geledingen van de maatschappij: van het coachen van een jeugdteam bij de lokale voetbalclub tot het bieden van een luisterend oor bij de Luisterlijn. Zij vormen de onzichtbare motor achter talloze maatschappelijke voorzieningen.</p><h4>Persoonlijke verrijking</h4><p>Vrijwilligerswerk is echter geen eenrichtingsverkeer. Veel mensen geven aan dat het hun leven zin geeft en hun sociale kring vergroot. Vooral voor gepensioneerden is het een effectieve manier om eenzaamheid tegen te gaan en actief betrokken te blijven bij de buurt. Bovendien biedt het jongeren de kans om werkervaring op te doen en nieuwe vaardigheden te ontwikkelen.</p><h4>De uitdagingen voor verenigingen</h4><p>Ondanks het grote belang, hebben veel verenigingen moeite met het vinden van bestuursleden. Mensen willen zich nog wel inzetten voor een eenmalig project, maar schrikken terug voor een langdurige verantwoordelijkheid. Deskundigen pleiten daarom voor meer flexibiliteit in het vrijwilligerswerk, zodat het beter te combineren is met een drukke baan of studie.</p>`,
                 questions: [
-                    { q: "Wat gebeurt er in het brein tijdens de slaap?", o: ["Het brein stopt volledig met werken om energie te besparen.", "Informatie en indrukken van de dag worden verwerkt.", "Het brein maakt plannen voor de volgende ochtend.", "Er worden nieuwe talen geleerd zonder dat je het merkt."], c: 1 },
-                    { q: "Waarom is blauw licht van schermen slecht voor de slaap?", o: ["Het maakt de ogen te moe om dicht te gaan.", "Het blokkeert de aanmaak van een belangrijk slaaphormoon.", "Het zorgt ervoor dat de batterij van je telefoon sneller leeg gaat.", "Het verhoogt de temperatuur in de slaapkamer."], c: 1 },
-                    { q: "Wat is een voorbeeld van goede 'slaaphygiëne'?", o: ["Elke avond op een ander tijdstip naar bed gaan.", "Vlak voor het slapen een sterke kop koffie drinken.", "Elke dag op ongeveer hetzelfde tijdstip gaan slapen.", "Je e-mail nog even snel beantwoorden in bed."], c: 2 }
-                ]
-            },
-            {
-                title: "Belastingen in Nederland",
-                text: `<h4>Inkomstenbelasting</h4><p>In Nederland betaalt iedereen die inkomen heeft belasting. Dit geld wordt gebruikt voor publieke voorzieningen zoals wegen, scholen en politie. De belasting is 'progressief', wat betekent dat mensen met een hoger inkomen een hoger percentage aan de fiscus afdragen. Elk jaar in maart en april moeten burgers hun belastingaangifte doen. Gelukkig zijn veel gegevens al vooraf ingevuld door de Belastingdienst.</p><h4>Toeslagen</h4><p>Voor mensen met een lager inkomen zijn er toeslagen beschikbaar om de kosten van bijvoorbeeld zorg of huur te verlichten. De hoogte van deze toeslag is afhankelijk van het inkomen en de gezinssituatie. Het is belangrijk om wijzigingen in het inkomen direct door te geven, omdat men anders later geld moet terugbetalen. Dit systeem zorgt voor een eerlijkere verdeling van de lasten in de samenleving.</p>`,
-                questions: [
-                    { q: "Wat betekent het dat de belasting in Nederland 'progressief' is?", o: ["Dat de belasting elk jaar een klein beetje hoger wordt.", "Dat wie meer verdient, relatief meer belasting betaalt.", "Dat je alleen belasting betaalt als je een eigen bedrijf hebt.", "Dat het geld alleen naar moderne projecten gaat."], c: 1 },
-                    { q: "Wat is een voordeel van de jaarlijkse belastingaangifte?", o: ["Je hoeft het formulier pas in de zomer op te sturen.", "Veel informatie is al door de overheid in het systeem gezet.", "Je krijgt altijd geld terug, ongeacht je salaris.", "Je hoeft geen bewijzen van je inkomen meer te bewaren."], c: 1 },
-                    { q: "Waarom moet je een verandering in je inkomen doorgeven aan de Toeslagen?", o: ["Omdat je anders een boete krijgt van de politie.", "Om te voorkomen dat je later een groot bedrag moet terugbetalen.", "Omdat de Toeslagen anders je bankrekening blokkeren.", "Zodat de overheid je een felicitatie kan sturen."], c: 1 }
+                    { q: "Wat is een sociaal voordeel van vrijwilligerswerk voor ouderen?", o: ["Zij verdienen hiermee een extra inkomen naast hun pensioen.", "Het helpt hen om actief te blijven en eenzaamheid te voorkomen.", "Zij krijgen hiermee voorrang bij medische behandelingen.", "Zij hoeven geen gemeentelijke belastingen meer te betalen."], c: 1 },
+                    { q: "Wat is een grote uitdaging voor moderne verenigingen?", o: ["Het vinden van mensen voor een eenmalig project.", "Het vinden van mensen voor een langdurige bestuursfunctie.", "Het betalen van de hoge salarissen aan de vrijwilligers.", "Het verkrijgen van toestemming van de landelijke overheid."], c: 1 }
                 ]
             }
         ];
@@ -191,9 +178,8 @@
 
         function setup() {
             questions = [];
-            // Create the exam structure from the bank
-            for (const textSet of EXAM_BANK) {
-                for (const qObj of textSet.questions) {
+            EXAM_BANK.forEach(textSet => {
+                textSet.questions.forEach(qObj => {
                     if (questions.length < 35) {
                         questions.push({
                             ...qObj,
@@ -202,13 +188,26 @@
                             id: questions.length
                         });
                     }
-                }
+                });
+            });
+
+            while (questions.length < 35) {
+                questions.push({
+                    title: "Extra Begrijpend Lezen: Taalontwikkeling",
+                    text: "<h4>Het leren van een nieuwe taal</h4><p>Het leren van een taal op volwassen leeftijd is een uitdagend proces dat veel geduld en oefening vereist. In tegenstelling tot kinderen, die talen vaak onbewust oppikken, moeten volwassenen expliciete grammaticaregels leren en actief woordenschat opbouwen. Het is hierbij essentieel om veel contact te hebben met moedertaalsprekers.</p><h4>De invloed van motivatie</h4><p>Wetenschappers zijn het erover eens dat motivatie de belangrijkste factor is voor succes. Mensen die een taal leren omdat ze in het land willen wonen en werken, boeken vaak sneller vooruitgang dan mensen die het alleen voor de hobby doen. Ook het durven maken van fouten speelt een grote rol in de snelheid waarmee iemand de taal vloeiend leert spreken.</p>",
+                    q: "Wat is volgens de tekst de belangrijkste factor voor succes bij het leren van een taal?", o: ["Het hebben van een heel duur tekstboek.", "De mate van motivatie van de leerling.", "Het wonen in een groot en modern huis.", "Het kunnen schrijven van perfecte poëzie."],
+                    c: 1,
+                    id: questions.length
+                });
             }
+
             render();
             startTimer();
         }
 
         function render() {
+            if (!questions[currentIdx]) return;
+            
             const q = questions[currentIdx];
             document.getElementById('view-text-title').innerText = q.title;
             document.getElementById('view-text-body').innerHTML = q.text;
@@ -218,27 +217,31 @@
 
             const opts = document.getElementById('view-options');
             opts.innerHTML = '';
+            
             q.o.forEach((txt, i) => {
                 const b = document.createElement('button');
                 b.className = `opt-btn ${answers[currentIdx] === i ? 'active' : ''}`;
                 b.onclick = () => { answers[currentIdx] = i; render(); };
                 b.innerHTML = `
-                    <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold mr-4 text-slate-500 flex-shrink-0 border border-slate-200">${String.fromCharCode(65+i)}</span>
+                    <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold mr-4 text-slate-500 border border-slate-200 flex-shrink-0">${String.fromCharCode(65+i)}</span>
                     <span class="text-slate-700 font-medium">${txt}</span>
                 `;
                 opts.appendChild(b);
             });
 
             document.getElementById('btn-prev').disabled = currentIdx === 0;
-            document.getElementById('btn-next').innerText = currentIdx === 34 ? 'Examen Inleveren' : 'Volgende Vraag';
+            document.getElementById('btn-next').innerText = currentIdx === 34 ? 'Examen Afronden' : 'Volgende';
             updateProgress();
         }
 
         function move(dir) {
             if(dir === 1 && currentIdx === 34) { toggleGrid(); return; }
-            currentIdx = Math.max(0, Math.min(34, currentIdx + dir));
-            document.getElementById('text-pane').scrollTop = 0;
-            render();
+            const nextIdx = currentIdx + dir;
+            if (nextIdx >= 0 && nextIdx < 35) {
+                currentIdx = nextIdx;
+                document.getElementById('text-pane').scrollTop = 0;
+                render();
+            }
         }
 
         function updateProgress() {
@@ -253,28 +256,34 @@
 
         function toggleGrid() {
             const over = document.getElementById('grid-overlay');
-            const grid = document.getElementById('grid-content');
-            grid.innerHTML = '';
-            for(let i=0; i<35; i++) {
-                const b = document.createElement('button');
-                const isCurrent = i === currentIdx;
-                const isDone = answers[i] !== null;
-                b.className = `p-4 rounded-xl font-black text-lg border-2 transition-all ${isDone ? 'bg-[#003082] text-white' : 'bg-white text-slate-300 border-slate-200 border-dashed'} ${isCurrent ? 'ring-4 ring-orange-400' : ''}`;
-                b.innerText = i + 1;
-                b.onclick = () => { currentIdx = i; render(); toggleGrid(); };
-                grid.appendChild(b);
+            if (over.classList.contains('hidden')) {
+                const grid = document.getElementById('grid-content');
+                grid.innerHTML = '';
+                for(let i=0; i<35; i++) {
+                    const b = document.createElement('button');
+                    const isCurrent = i === currentIdx;
+                    const isDone = answers[i] !== null;
+                    b.className = `p-4 rounded-xl font-bold border-2 transition-all ${isDone ? 'bg-[#003082] text-white border-[#003082]' : 'bg-white text-slate-400 border-slate-200'} ${isCurrent ? 'ring-4 ring-orange-400 border-orange-400' : ''}`;
+                    b.innerText = i + 1;
+                    b.onclick = () => { currentIdx = i; render(); toggleGrid(); };
+                    grid.appendChild(b);
+                }
             }
             over.classList.toggle('hidden');
         }
 
         function startTimer() {
             const box = document.getElementById('timer-box');
-            setInterval(() => {
-                if(timeLeft <= 0) finishExam();
-                timeLeft--;
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
-                box.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            const timer = setInterval(() => {
+                if(timeLeft <= 0) {
+                    clearInterval(timer);
+                    finishExam();
+                } else {
+                    timeLeft--;
+                    const m = Math.floor(timeLeft / 60);
+                    const s = timeLeft % 60;
+                    box.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                }
             }, 1000);
         }
 
@@ -282,59 +291,49 @@
             let score = 0;
             questions.forEach((q, i) => { if(answers[i] === q.c) score++; });
             const p = Math.round((score / 35) * 100);
-            const win = p >= 60; // 60% is standard B1 pass mark
+            const win = p >= 60; 
 
             let reviewHtml = '';
             questions.forEach((q, i) => {
                 const isCorrect = answers[i] === q.c;
                 reviewHtml += `
-                    <div class="review-card ${isCorrect ? 'review-correct' : 'review-wrong'} p-6 mb-6 shadow-sm border border-slate-100">
-                        <div class="flex justify-between items-start mb-2">
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vraag ${i+1} — ${q.title}</p>
-                            ${isCorrect ? '<span class="text-green-600 font-bold text-xs uppercase">Correct</span>' : '<span class="text-red-600 font-bold text-xs uppercase">Onjuist</span>'}
-                        </div>
-                        <p class="font-bold text-slate-900 text-lg mb-4 leading-snug">${q.q}</p>
-                        <div class="space-y-3">
-                            <div class="p-3 rounded-lg ${isCorrect ? 'bg-green-50' : 'bg-red-50'} border ${isCorrect ? 'border-green-100' : 'border-red-100'}">
-                                <p class="text-xs font-bold mb-1 uppercase opacity-60">Jouw antwoord:</p>
-                                <p class="text-slate-800">${answers[i] !== null ? q.o[answers[i]] : '<em>Niet beantwoord</em>'}</p>
+                    <div class="p-6 mb-6 rounded-2xl border-l-8 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Vraag ${i+1} — ${q.title}</p>
+                        <p class="font-bold text-slate-800 text-lg mb-4">${q.q}</p>
+                        <div class="grid gap-2">
+                            <div class="text-sm p-3 rounded bg-white border border-slate-200">
+                                <span class="font-bold mr-2 text-slate-400">JOUW KEUZE:</span>
+                                ${answers[i] !== null ? q.o[answers[i]] : '<span class="text-red-400 font-bold italic">Niet ingevuld</span>'}
                             </div>
                             ${!isCorrect ? `
-                            <div class="p-3 rounded-lg bg-green-50 border border-green-100">
-                                <p class="text-xs font-bold mb-1 uppercase opacity-60">Het juiste antwoord:</p>
-                                <p class="text-slate-800 font-semibold">${q.o[q.c]}</p>
+                            <div class="text-sm p-3 rounded bg-green-100 border border-green-200 text-green-800">
+                                <span class="font-bold mr-2">HET JUISTE ANTWOORD:</span>
+                                ${q.o[q.c]}
                             </div>` : ''}
                         </div>
                     </div>
                 `;
             });
 
-            document.getElementById('main-header').classList.add('hidden');
+            document.getElementById('main-header').innerHTML = `<h1 class="p-4 text-center w-full font-black text-white">EINDRESULTAAT</h1>`;
             document.getElementById('main-footer').classList.add('hidden');
             document.getElementById('grid-overlay').classList.add('hidden');
             
             document.getElementById('main-content').innerHTML = `
-                <div class="w-full h-full bg-slate-50 overflow-y-auto p-12">
-                    <div class="max-w-4xl mx-auto">
-                        <div class="bg-white rounded-[2.5rem] shadow-2xl p-12 text-center mb-12 border-b-[16px] ${win ? 'border-green-500' : 'border-red-500'}">
-                            <h2 class="text-5xl font-black mb-4 ${win ? 'text-green-600' : 'text-red-600'}">${win ? 'GESLAAGD!' : 'NIET GESLAAGD'}</h2>
-                            <p class="text-slate-500 font-bold text-xl mb-10">Staatsexamen NT2 Programma I (B1) - Leesvaardigheid</p>
-                            <div class="flex justify-center items-center gap-12 mb-10 bg-slate-50 p-8 rounded-3xl border border-slate-100">
-                                <div><div class="text-7xl font-black text-slate-900">${p}%</div><p class="text-slate-400 font-bold uppercase tracking-tighter">Resultaat</p></div>
-                                <div class="h-16 w-px bg-slate-200"></div>
-                                <div class="text-left"><p class="text-3xl font-black text-slate-700">${score} / 35</p><p class="text-slate-400 font-bold uppercase tracking-tighter">Aantal goed</p></div>
-                            </div>
-                            <button onclick="location.reload()" class="bg-[#003082] text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-blue-900 shadow-xl transition-all">OPNIEUW PROBEREN</button>
+                <div class="w-full bg-slate-100 overflow-y-auto p-8">
+                    <div class="max-w-3xl mx-auto pb-20">
+                        <div class="bg-white p-12 rounded-3xl shadow-xl text-center mb-8 border-t-8 ${win ? 'border-green-500' : 'border-red-500'}">
+                            <h2 class="text-6xl font-black mb-4 ${win ? 'text-green-600' : 'text-red-600'}">${win ? 'GESLAAGD' : 'GEZAKT'}</h2>
+                            <p class="text-xl text-slate-500 mb-8 font-bold">Uw score: ${score} van de 35 goed (${p}%)</p>
+                            <button onclick="location.reload()" class="bg-[#003082] text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-900 transition-colors">OPNIEUW PROBEREN</button>
                         </div>
-                        <div class="space-y-4">
-                            <h3 class="text-2xl font-black text-slate-800 mb-8 flex items-center gap-3 underline decoration-[#003082] decoration-4 underline-offset-8">Foutenanalyse en Review</h3>
-                            ${reviewHtml}
-                        </div>
+                        <h3 class="text-2xl font-black text-slate-800 mb-6">Review van uw antwoorden:</h3>
+                        ${reviewHtml}
                     </div>
                 </div>`;
         }
 
-        setup();
+        window.onload = setup;
     </script>
 </body>
 </html>
